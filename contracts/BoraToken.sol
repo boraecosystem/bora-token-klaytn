@@ -12,6 +12,7 @@ contract BoraToken is ERC20, ERC20Detailed, ERC20Capped, ERC20Burnable, ERC20Pau
 
     event Lock(address token, address beneficiary, uint256 amount, uint256 releaseTime);
     event Burn(address to, uint256 amount, uint256 totalSupply);
+    event OwnershipTransferred(address indexed previousOwner, address indexed newOwner);
 
     constructor(uint256 initialSupply) ERC20Detailed("BORA", "BORA", 18) ERC20Capped(initialSupply) public {
         _mint(msg.sender, initialSupply);
@@ -69,5 +70,39 @@ contract BoraToken is ERC20, ERC20Detailed, ERC20Capped, ERC20Burnable, ERC20Pau
     function burn(uint256 amount) public onlyMinter {
         ERC20Burnable.burn(amount);
         emit Burn(msg.sender, amount, totalSupply());
+    }
+
+    /**
+     * @dev Adds ownership (MinterRole, PauserRole, WhitelistAdminRole) to `newOwner`.
+     *
+     * Emits a `OwnershipTransferred` event.
+     *
+     * Requirements:
+     *
+     * - the caller must have the `MinterRole`, `PauserRole` and `WhitelistAdminRole`.
+     * - `newOwner` cannot be the zero address.
+     */
+    function addOwnership(address newOwner) public onlyMinter onlyPauser onlyWhitelistAdmin {
+        require(newOwner != address(0), "BoraToken: add ownership to the zero address");
+        super.addMinter(newOwner);
+        super.addPauser(newOwner);
+        super.addWhitelistAdmin(newOwner);
+        emit OwnershipTransferred(msg.sender, newOwner);
+    }
+
+    /**
+     * @dev Renounces ownership (MinterRole, PauserRole, WhitelistAdminRole) from the caller.
+     *
+     * Emits a `OwnershipTransferred` event with `newOwner` set to the zero address.
+     *
+     * Requirements:
+     *
+     * - the caller must have the `MinterRole`, `PauserRole` and `WhitelistAdminRole`.
+     */
+    function renounceOwnership() public onlyMinter onlyPauser onlyWhitelistAdmin {
+        super.renounceMinter();
+        super.renouncePauser();
+        super.renounceWhitelistAdmin();
+        emit OwnershipTransferred(msg.sender, address(0));
     }
 }
