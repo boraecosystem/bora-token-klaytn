@@ -6,7 +6,8 @@
   "scripts": {
     "test": "truffle compile && (npm run testrpc > /dev/null & truffle test) && kill -9 $(lsof -ti :8545)",
     "testrpc": "npx ganache-cli -p 8545",
-    "console": "truffle console"
+    "console": "truffle console",
+    "flattener": "truffle-flattener contracts/BoraToken.sol --output dist/BoraToken.dist.sol"
   },
   "repository": {
     "type": "git",
@@ -20,6 +21,7 @@
   },
   "devDependencies": {
     "ganache-cli": "^6.7.0",
-    "truffle": "5.0.26"
+    "truffle": "5.0.26",
+    "truffle-flattener": "^1.4.2"
   }
 }

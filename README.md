@@ -23,6 +23,11 @@ cd PATH-TO-CODE
 npm run test
 ```
 
+```sh
+# 3. Flattening
+npm run flattener
+```
+
 
 ### Overview of Directories
 
@@ -37,7 +42,6 @@ npm run test
 - [truffle install](https://www.trufflesuite.com/docs/truffle/getting-started/installation)
 - [ganache-cli install](https://www.npmjs.com/package/ganache-cli)
 - [install Ganache win ver.](https://www.trufflesuite.com/ganache)
-
 
 
 ## License and Intellectual Property included in this Contracts
