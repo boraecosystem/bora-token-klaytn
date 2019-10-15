@@ -118,4 +118,11 @@ contract BoraToken is ERC20, ERC20Detailed, ERC20Capped, ERC20Burnable, ERC20Pau
         addAdmin(newOwner);
         Ownable.transferOwnership(newOwner);
     }
+
+    /**
+     * @dev To disable renounceOwnership() of Ownable contract
+     */
+    function renounceOwnership() public onlyOwner {
+        revert("BoraToken: renounceOwnership is disabled");
+    }
 }
