@@ -12,7 +12,8 @@ import "./LockedToken.sol";
 contract BoraToken is ERC20, ERC20Detailed, ERC20Capped, ERC20Burnable, ERC20Pausable, Ownable, BlacklistedRole {
 
     event Lock(address token, address beneficiary, uint256 amount, uint256 releaseTime);
-    event Burn(address to, uint256 amount, uint256 totalSupply);
+    event Mint(address indexed to, uint256 amount, uint256 totalSupply);
+    event Burn(address indexed from, uint256 amount, uint256 totalSupply);
     event AdminAdded(address indexed account);
     event AdminRemoved(address indexed account);
     event OwnershipTransferred(address indexed previousOwner, address indexed newOwner);
@@ -42,6 +43,7 @@ contract BoraToken is ERC20, ERC20Detailed, ERC20Capped, ERC20Burnable, ERC20Pau
      */
     function transferFrom(address sender, address recipient, uint256 amount) public notBlacklisted returns (bool) {
         require(!isBlacklisted(sender), "BoraToken: sender has the Blacklisted role");
+
         return super.transferFrom(sender, recipient, amount);
     }
 
@@ -66,13 +68,48 @@ contract BoraToken is ERC20, ERC20Detailed, ERC20Capped, ERC20Burnable, ERC20Pau
     }
 
     /**
+     * @dev Creates `amount` tokens and assigns them to `account`, increasing
+     * the total supply.
+     *
+     * Emits a `Mint` event.
+     *
+     * Requirements:
+     *
+     * - the caller must have the `MinterRole`.
+     */
+    function mint(address account, uint256 amount) public onlyMinter returns (bool) {
+        super.mint(account, amount);
+        emit Mint(account, amount, totalSupply());
+        return true;
+    }
+
+    /**
      * @dev Destroys `amount` tokens from the caller.
      *
      * Emits a `Burn` event.
+     *
+     * Requirements:
+     *
+     * - the caller must have the `MinterRole`.
      */
     function burn(uint256 amount) public onlyMinter {
-        ERC20Burnable.burn(amount);
+        super.burn(amount);
         emit Burn(msg.sender, amount, totalSupply());
+    }
+
+    /**
+     * @dev Destoys `amount` tokens from `account`.`amount` is then deducted
+     * from the caller's allowance.
+     *
+     * Emits a `Burn` event.
+     *
+     * Requirements:
+     *
+     * - the caller must have the `MinterRole`.
+     */
+    function burnFrom(address account, uint256 amount) public onlyMinter {
+        super.burnFrom(account, amount);
+        emit Burn(account, amount, totalSupply());
     }
 
     /**
@@ -87,9 +124,16 @@ contract BoraToken is ERC20, ERC20Detailed, ERC20Capped, ERC20Burnable, ERC20Pau
      */
     function addAdmin(address newAdmin) public onlyMinter onlyPauser onlyWhitelistAdmin {
         require(newAdmin != address(0), "BoraToken: add admin of the zero address");
-        super.addMinter(newAdmin);
-        super.addPauser(newAdmin);
-        super.addWhitelistAdmin(newAdmin);
+
+        if (!isMinter(newAdmin)) {
+            super.addMinter(newAdmin);
+        }
+        if (!isPauser(newAdmin)) {
+            super.addPauser(newAdmin);
+        }
+        if (!isWhitelistAdmin(newAdmin)) {
+            super.addWhitelistAdmin(newAdmin);
+        }
         emit AdminAdded(newAdmin);
     }
 
@@ -101,8 +145,11 @@ contract BoraToken is ERC20, ERC20Detailed, ERC20Capped, ERC20Burnable, ERC20Pau
      * Requirements:
      *
      * - the caller must have the `MinterRole`, `PauserRole` and `WhitelistAdminRole`.
+     * - the caller cannot be the owner.
      */
     function renounceAdmin() public onlyMinter onlyPauser onlyWhitelistAdmin {
+        require(!isOwner(), "BoraToken: owner should be admin");
+
         super.renounceMinter();
         super.renouncePauser();
         super.renounceWhitelistAdmin();
@@ -116,7 +163,7 @@ contract BoraToken is ERC20, ERC20Detailed, ERC20Capped, ERC20Burnable, ERC20Pau
      */
     function transferOwnership(address newOwner) public onlyOwner {
         addAdmin(newOwner);
-        Ownable.transferOwnership(newOwner);
+        super.transferOwnership(newOwner);
     }
 
     /**
@@ -124,5 +171,32 @@ contract BoraToken is ERC20, ERC20Detailed, ERC20Capped, ERC20Burnable, ERC20Pau
      */
     function renounceOwnership() public onlyOwner {
         revert("BoraToken: renounceOwnership is disabled");
+    }
+
+    /**
+     * @dev To disable renounceMinter() of MinterRole contract from owner
+     */
+    function renounceMinter() public onlyMinter {
+        require(!isOwner(), "BoraToken: owner should have the Minter role");
+
+        super.renounceMinter();
+    }
+
+    /**
+     * @dev To disable renouncePauser() of PauserRole contract from owner
+     */
+    function renouncePauser() public onlyPauser {
+        require(!isOwner(), "BoraToken: owner should have the Pauser role");
+
+        super.renouncePauser();
+    }
+
+    /**
+     * @dev To disable renounceWhitelistAdmin() of WhitelistAdminRole contract from owner
+     */
+    function renounceWhitelistAdmin() public onlyWhitelistAdmin {
+        require(!isOwner(), "BoraToken: owner should have the WhitelistAdmin role");
+
+        super.renounceWhitelistAdmin();
     }
 }
