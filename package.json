@@ -4,10 +4,7 @@
   "description": "Truffle framework for testing BORA Token",
   "main": "truffle-config.js",
   "scripts": {
-    "test": "truffle compile && (npm run testrpc > /dev/null & truffle test) && kill -9 $(lsof -ti :8545)",
-    "testrpc": "npx ganache-cli -p 8545",
-    "console": "truffle console",
-    "flattener": "truffle-flattener contracts/BoraToken.sol --output dist/BoraToken.dist.sol"
+    "test": "node test/deploy.js"
   },
   "repository": {
     "type": "git",
@@ -16,12 +13,9 @@
   "author": "boraecosystem <contact@boraecosystem.com>",
   "license": "MIT",
   "homepage": "https://www.boraecosystem.com",
-  "dependencies": {
-    "openzeppelin-solidity": "2.3.0"
-  },
   "devDependencies": {
-    "ganache-cli": "^6.7.0",
-    "truffle": "5.0.26",
-    "truffle-flattener": "^1.4.2"
+    "caver-js": "^1.6.3",
+    "js-big-decimal": "^1.3.4",
+    "truffle": "5.0.26"
   }
 }

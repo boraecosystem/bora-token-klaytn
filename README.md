@@ -1,10 +1,10 @@
 # BORA Ecosystem Smart Contract
 
-This is Smart Contract for utilizing in BORA Ecosystem. If you want to understand BORA Ecosystem, please refer to our [project official site](https://bora.boraecosystem.com).
+This repository is a collection of files containing the BORA token Solidity file, as well as various scripts that can be utilized to test the BORA contract. If you want to read more about the BORA Ecosystem, please take a look at our [official project website](https://bora.boraecosystem.com).
 
 ## Testing
 
-If you want to verify BORA token contract using test code in this repository, you need to install truffle and ganache client for your convenience.
+If you want to verify the BORA token contract using the test code in this repository, installation of caver-js library will be required. You must also register and log into the [KAS API console](https://console.klaytnapi.com) to receive your KAS credentials (namely the access key ID as well as the secret access key). After that, you must configure the `kasConfig` and `walletConfig` variable in test/deploy.js file
 
 ### Installation of Testing Tools
 
@@ -20,29 +20,22 @@ npm install
 ```sh
 # 2. Testing
 cd PATH-TO-CODE
+
 npm run test
 ```
 
-```sh
-# 3. Flattening
-npm run flattener
-```
-
-
 ### Overview of Directories
 
-* contracts  : Directory for Solidity Contracts.
-* migrations : Directory for deployment files.
-* test : Directory for test suites of the Smart Contracts.
+* contracts  : Directory for Solidity contracts.
+* test : Directory for test suites of the smart contracts.
 * truffle-config.js : Truffle configuration file.
 
 
 ### Relevant URLs for Tools
 
-- [truffle install](https://www.trufflesuite.com/docs/truffle/getting-started/installation)
-- [ganache-cli install](https://www.npmjs.com/package/ganache-cli)
-- [install Ganache win ver.](https://www.trufflesuite.com/ganache)
-
+- [klaytn](https://docs.klaytn.com)
+- [kas api](https://docs.klaytnapi.com)
+- [kas api console](https://console.klaytnapi.com)
 
 ## License and Intellectual Property included in this Contracts
 
