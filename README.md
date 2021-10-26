@@ -1,4 +1,6 @@
-# BORA Ecosystem Smart Contract
+#* contracts  : Directory for Solidity contracts.
+* test : Directory for test suites of the smart contracts.
+* truffle-config.js : Truffle configuration file. BORA Ecosystem Smart Contract
 
 This repository is a collection of files containing the BORA token Solidity file, as well as various scripts that can be utilized to test the BORA contract. If you want to read more about the BORA Ecosystem, please take a look at our [official project website](https://bora.boraecosystem.com).
 
@@ -26,10 +28,10 @@ npm run test
 
 ### Overview of Directories
 
-* contracts  : Directory for Solidity contracts.
+* contracts : Directory for Solidity contracts.
 * test : Directory for test suites of the smart contracts.
 * truffle-config.js : Truffle configuration file.
-
+> The bytecode included in /contracts/BoraToken_klaytn_bytecode.txt was obtained by compiling the project with Truffle. Using a different tool to compile the source code could result in a different bytecode value.
 
 ### Relevant URLs for Tools
 
