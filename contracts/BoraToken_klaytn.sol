@@ -731,3 +731,4 @@ contract BoraToken is ERC20, ERC20Detailed, ERC20Burnable, ERC20Pausable, Ownabl
         revert("BoraToken: renounceOwnership is disabled");
     }
 }
+
